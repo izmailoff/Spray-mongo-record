@@ -49,10 +49,10 @@ libraryDependencies ++= {
     // Spray:
     "io.spray" % "spray-can" % sprayVersion,
     "io.spray" % "spray-routing" % sprayVersion,
-    "io.spray" % "spray-testkit" % sprayVersion % "test",
+    "io.spray" % "spray-testkit" % sprayVersion, // % "test",
     // Test: // what scope should it be compile or test?
-    "org.specs2" %% "specs2" % "2.3.12" % "test",
-    "com.github.fakemongo" % "fongo" % "1.5.5" % "test",
+    "org.specs2" %% "specs2" % "2.3.12", // % "test", TODO: These have to be extracted into a separate project for testing
+    "com.github.fakemongo" % "fongo" % "1.5.5", // % "test",
     // Akka: //needed by Spray
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test"
