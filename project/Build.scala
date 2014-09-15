@@ -3,6 +3,7 @@ package com.github.izmailoff
 import sbt._
 import sbt.Keys._
 import sbt.Tests
+import xerial.sbt.Sonatype._
 
 object SprayMongoRecord extends Build {
 
@@ -57,7 +58,8 @@ object SprayMongoRecord extends Build {
   override lazy val settings =
     super.settings ++
       buildSettings ++
-      defaultSettings
+      defaultSettings ++
+      sonatypeSettings
 
   lazy val buildSettings = Seq(
     organization := "com.github.izmailoff",
@@ -66,7 +68,29 @@ object SprayMongoRecord extends Build {
   )
 
   lazy val defaultSettings = Seq(
-    // Compile options
+    publishArtifact in Test := false,
+    pomExtra := {
+      <url>https://github.com/izmailoff/Spray-mongo-record</url>
+        <licenses>
+          <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/izmailoff/Spray-mongo-record/master/LICENSE</url>
+          </license>
+        </licenses>
+        <scm>
+          <connection>scm:git:github.com/https://github.com/izmailoff/Spray-mongo-record</connection>
+          <developerConnection>scm:git:git@github.com:https://github.com/izmailoff/Spray-mongo-record</developerConnection>
+          <url>github.com/https://github.com/izmailoff/Spray-mongo-record</url>
+        </scm>
+        <developers>
+          <developer>
+            <id>izmailoff</id>
+            <name>Aleksey Izmailov</name>
+            <url>http://izmailoff.github.io/</url>
+          </developer>
+        </developers>
+    },
+      // Compile options
     scalacOptions in Compile ++=
       Seq("-encoding",
         "UTF-8",
