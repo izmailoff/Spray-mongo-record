@@ -1,7 +1,7 @@
 package com.github.izmailoff.testing
 
 import akka.actor.ActorSystem
-import com.github.izmailoff.service.RestService // which project???
+import com.github.izmailoff.service.RestService
 import org.specs2.mutable.Specification
 import org.specs2.specification.AroundOutside
 import spray.testkit.Specs2RouteTest
@@ -11,13 +11,13 @@ import org.specs2.execute.{AsResult, Result}
  * Provides [[RestService]] and [[MongoDbTestContext]] context for each specification so that the client
  * does not need to setup MongoDB explicitly or provide all dependencies for the REST service.
  */
-trait RestServiceMongoDbTestContext
+trait RestServiceMongoDbTestContext[T <: RestService]
   extends Specification
   with Specs2RouteTest {
 
   //val globalSystem = system
 
-  def serviceContext: AroundOutsideRestService
+  def serviceContext: AroundOutsideRestService[T]
 
   // TODO: put these helpers somewhere or remove completely:
   //  def haveContentEncoding(encoding: HttpEncoding) =
@@ -41,19 +41,22 @@ trait RestServiceMongoDbTestContext
  *
  * @param system A test Actor system provided by Spray TestKit. Use it to connect to actorRefFactory in your HTTP service.
  */
-abstract class AroundOutsideRestService(system: ActorSystem)
-  extends AroundOutside[RestService]
+abstract class AroundOutsideRestService[T <: RestService](system: ActorSystem)
+  extends AroundOutside[T]
   with MongoDbTestContext {
+//  self: AroundOutside[RestService]
+//    with MongoDbTestContext =>
 
-  def around[T: AsResult](t: => T): Result =
+  def around[R: AsResult](t: => R): Result =
     databaseContext(service.currentMongoId).around(t)
 
-  def outside: RestService = service
+  def outside: T = service
 
-  val service: RestService
+  val service: T
 
   val globalSystem = system
 
+  // I can add all of these to the type maybe:
   //      val service = new RestServiceImpl
   //        with RandomDbConnectionIdentifier
   //        with DbCrudProviderImpl {

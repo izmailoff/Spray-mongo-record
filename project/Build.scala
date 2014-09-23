@@ -4,6 +4,7 @@ import sbt._
 import sbt.Keys._
 import sbt.Tests
 import xerial.sbt.Sonatype._
+import xerial.sbt.Sonatype.SonatypeKeys._
 
 object SprayMongoRecord extends Build {
 
@@ -69,6 +70,7 @@ object SprayMongoRecord extends Build {
 
   lazy val defaultSettings = Seq(
     publishArtifact in Test := false,
+    profileName := "com.github.izmailoff",
     pomExtra := {
       <url>https://github.com/izmailoff/Spray-mongo-record</url>
         <licenses>
@@ -114,6 +116,9 @@ object SprayMongoRecord extends Build {
 
     object Compile {
 
+      // MONGO DRIVER
+      val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.12.3" // may cause conflicts, now there are 2!!! drivers
+
       // LIFT
       val liftVersion = "2.5.1"
       val liftJson = "net.liftweb" %% "lift-json" % liftVersion
@@ -121,10 +126,10 @@ object SprayMongoRecord extends Build {
       val liftRecord = "net.liftweb" %% "lift-mongodb-record" % liftVersion
 
       // ROGUE
-      val rogueField = "com.foursquare" %% "rogue-field" % "2.2.1" intransitive()
-      val rogueCore = "com.foursquare" %% "rogue-core" % "2.3.0" intransitive()
-      val rogueLift = "com.foursquare" %% "rogue-lift" % "2.3.0" intransitive()
-      val rogueIndex = "com.foursquare" %% "rogue-index" % "2.3.0" intransitive()
+      val rogueField = "com.foursquare" %% "rogue-field" % "2.4.0" intransitive()
+      val rogueCore = "com.foursquare" %% "rogue-core" % "2.4.0" intransitive()
+      val rogueLift = "com.foursquare" %% "rogue-lift" % "2.4.0" intransitive()
+      val rogueIndex = "com.foursquare" %% "rogue-index" % "2.4.0" intransitive()
 
       // SPRAY
       val sprayVersion = "1.3.1"
@@ -140,14 +145,14 @@ object SprayMongoRecord extends Build {
       // TEST
       object Test {
         val specs2 = "org.specs2" %% "specs2" % "2.3.12" //% "test"
-        val testDb = "com.github.fakemongo" % "fongo" % "1.5.5" //% "test"
+        val testDb = "com.github.fakemongo" % "fongo" % "1.5.6" //% "test"
       }
     }
 
     import Compile._
 
     val rogue = Seq(rogueField, rogueCore, rogueLift, rogueIndex)
-    val lift = Seq(liftCommon, liftRecord, liftJson)
+    val lift = Seq(mongoDriver, liftCommon, liftRecord, liftJson)
     val akka = Seq(akkaActor, akkaTestkit)
     val spray = Seq(sprayCan, sprayRouting)
     val testKit = Seq(sprayTestkit, Test.specs2, Test.testDb)
