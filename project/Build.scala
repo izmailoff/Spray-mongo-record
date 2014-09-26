@@ -117,7 +117,10 @@ object SprayMongoRecord extends Build {
     object Compile {
 
       // MONGO DRIVER
-      val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.12.3" // may cause conflicts, now there are 2!!! drivers
+      val mongoDriver = "org.mongodb" % "mongo-java-driver" % "2.12.3" % "test" // may cause conflicts, now there are 2!!! drivers
+
+      // MONGO SCHEMA MIGRATION
+      val mongeez = "org.mongeez" % "mongeez" % "0.9.4"
 
       // LIFT
       val liftVersion = "2.5.1"
@@ -152,10 +155,11 @@ object SprayMongoRecord extends Build {
     import Compile._
 
     val rogue = Seq(rogueField, rogueCore, rogueLift, rogueIndex)
-    val lift = Seq(mongoDriver, liftCommon, liftRecord, liftJson)
+    val lift = Seq(mongoDriver, liftCommon, liftRecord, liftJson, mongeez)
     val akka = Seq(akkaActor, akkaTestkit)
     val spray = Seq(sprayCan, sprayRouting)
     val testKit = Seq(sprayTestkit, Test.specs2, Test.testDb)
+    val testKitScoped = Seq(sprayTestkit % "test", Test.specs2 % "test", Test.testDb % "test")
   }
 
 }
