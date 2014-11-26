@@ -1,17 +1,17 @@
 package com.github.izmailoff.testing
 
-import com.github.izmailoff.logging.AkkaLoggingHelper
-import com.mongodb.Mongo
-import net.liftweb.mongodb.{MongoDB, MongoIdentifier}
 import com.github.fakemongo.Fongo
-import org.specs2.mutable.Around
+import com.mongodb.{DB, Mongo}
+import net.liftweb.mongodb.{MongoDB, MongoIdentifier}
 import org.specs2.execute.{AsResult, Result}
+import org.specs2.mutable.Around
+
+import scala.collection.JavaConversions._
 
 /**
  * Defines a helper test trait that provides DB connection for tests.
  */
-trait MongoDbTestContext
-  extends AkkaLoggingHelper {
+trait MongoDbTestContext {
 
   /**
    * Override this if you want to define real MongoDB database connection or faked in-memory Fongo database.
@@ -30,16 +30,34 @@ trait MongoDbTestContext
   def databaseContext(implicit mongoId: MongoIdentifier) = new Around {
     override def around[T: AsResult](t: => T): Result = {
       val dbName = mongoId.jndiName
-      log.debug("\n" + "*" * 20 + s" SPINNING UP MONGO DATABASE [$dbName] " + "*" * 20)
       MongoDB.defineDb(mongoId, mongo, dbName)
       val currentDb = MongoDB.getDb(mongoId).get
-      //createAllEmptyCollections(currentDb)
-      //dropAllCollections(currentDb)
-      //createAllEmptyCollections(currentDb)
+//      createAllEmptyCollections(currentDb)
+//      dropAllCollections(currentDb)
+//      createAllEmptyCollections(currentDb)
       val result = AsResult(t)
-      log.debug("*" * 20 + s"  SHUTTING DOWN MONGO DATABASE [$dbName]  " + "*" * 20 + "\n")
       currentDb.dropDatabase()
       result
     }
   }
+
+//  /**
+//   * Just referencing a collection should create it.
+//   */
+//  def createEmptyCollection(db: DB, name: String): Unit =
+//    db.getCollection(name)
+//
+//  /**
+//   * Drops all collections keeping DB.
+//   */
+//  def dropAllCollections(db: DB): Unit =
+//    db.getCollectionNames foreach { db.getCollection(_).drop() }
+//
+//  /**
+//   * Creates/touches all empty collections in our DB. This avoids errors with index creation
+//   * if collection does not exist or in tests.
+//   */
+//  def createAllEmptyCollections(db: DB): Unit =
+//    db.getCollectionNames foreach { createEmptyCollection(db, _) }
+
 }
