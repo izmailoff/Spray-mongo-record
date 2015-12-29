@@ -1,4 +1,6 @@
 # Build Status
+
+[![Join the chat at https://gitter.im/izmailoff/Spray-mongo-record](https://badges.gitter.im/izmailoff/Spray-mongo-record.svg)](https://gitter.im/izmailoff/Spray-mongo-record?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/izmailoff/Spray-mongo-record.png?branch=master)]
 (https://travis-ci.org/izmailoff/Spray-mongo-record)
 
